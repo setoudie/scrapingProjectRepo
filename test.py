@@ -1,3 +1,4 @@
+import secrets
 from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
@@ -11,10 +12,12 @@ driver.maximize_window()
 driver.get("https://www.google.com/")
 driver.find_element(by=By.NAME, value='q').send_keys('javafont')
 # Here, we have to identify the Google search text box and enter the value
-time.sleep(13)  # here, the system will remain in sleep for 13sec
+time.sleep(3)  # here, the system will remain in sleep for 13sec
 # After done with the process click on the Google search button
 driver.find_element(by=By.NAME, value="btnK").send_keys(Keys.ENTER)
-time.sleep(13)  # here, the system will remain in sleep for 13sec
+time.sleep(3)  # here, the system will remain in sleep for 13sec
 # Here, we are trying to close the browser
-driver.close()
+# driver.close()
 print("sample test case successfully completed")
+
+print(secrets.token_hex(20))
