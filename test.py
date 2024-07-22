@@ -1,23 +1,31 @@
-import secrets
-from selenium import webdriver
 import time
+from selenium import webdriver
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from bs4 import BeautifulSoup
+import pandas as pd
+import requests
+from selenium.webdriver.support.wait import WebDriverWait
 
-print("Here the sample test case will be started")
+url = 'https://www.indeed.com/?from=jobsearch-empty-whatwhere'
+
+SEARCH_THEME = 'Technology'
+LOCALITY = 'Senegal'
+
 driver = webdriver.Chrome()
-# Here, this statement is used to maximize the window size
-driver.maximize_window()
-# Here, this statement is used to navigate to the url
-driver.get("https://www.google.com/")
-driver.find_element(by=By.NAME, value='q').send_keys('javafont')
-# Here, we have to identify the Google search text box and enter the value
-time.sleep(3)  # here, the system will remain in sleep for 13sec
-# After done with the process click on the Google search button
-driver.find_element(by=By.NAME, value="btnK").send_keys(Keys.ENTER)
-time.sleep(3)  # here, the system will remain in sleep for 13sec
-# Here, we are trying to close the browser
-# driver.close()
-print("sample test case successfully completed")
+driver.get(url)
 
-print(secrets.token_hex(20))
+search_box_input = WebDriverWait(driver, 15).until(
+    EC.presence_of_element_located((By.ID, "text-input-what"))
+)
+search_box_input.send_keys(SEARCH_THEME + Keys.ENTER)
+locality_box_input = driver.find_element(By.ID, "text-input-where")
+locality_box_input.send_keys(LOCALITY + Keys.ENTER)
+
+job_search_page = driver.page_source
+soupe = BeautifulSoup(job_search_page, 'html.parser')
+
+print(soupe)
+time.sleep(5)
