@@ -25,7 +25,7 @@ driver = webdriver.Chrome(service=service)
 # driver.get('https://google.com')
 driver.maximize_window()
 driver.get(monster_link)
-
+time.sleep(5)
 # Get the "Log In" btn and click it
 log_in_btn = WebDriverWait(driver, 5).until(
     EC.presence_of_element_located((By.LINK_TEXT, "Log in"))
@@ -37,15 +37,19 @@ log_in_btn.click()
 username_input = WebDriverWait(driver, 20).until(
     EC.presence_of_element_located((By.ID, "email"))
 )
-username_input.send_keys(E_MAIL + Keys.ENTER)
+username_input.send_keys(E_MAIL)
+time.sleep(3)
+username_input.send_keys(Keys.ENTER)
 # time.sleep(5)
 
 # Get the password input and write here the PASSWORD
-password_input = WebDriverWait(driver, 3).until(
+password_input = WebDriverWait(driver, 5).until(
     EC.presence_of_element_located((By.ID, "password"))
 )
-password_input.send_keys(PASSWORD + Keys.ENTER)
+password_input.send_keys(PASSWORD)
+time.sleep(5)
+password_input.send_keys(Keys.ENTER)
 
-time.sleep(20)
+time.sleep(60)
 
 driver.quit()

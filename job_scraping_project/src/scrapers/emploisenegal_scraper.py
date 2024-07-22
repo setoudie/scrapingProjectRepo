@@ -1,11 +1,25 @@
+import sqlite3
+import psycopg2
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from sqlalchemy import create_engine
+
+
+# Database information
+DB_NAME = 'postgres'
+USER = "my_prompt_project_admin"
+HOST = 'localhost'
+PASS = "wrongpassword"
+PORT = 5432
 
 url = 'https://www.emploisenegal.com/recherche-jobs-senegal/it?f%5B0%5D=im_field_offre_metiers%3A31&f%5B1%5D=im_field_offre_metiers%3A35&f%5B2%5D=im_field_offre_metiers%3A39'
-db_name = 'IT_Jobs.db'
 table_name = 'EmploisSenegal_IT_jobs'
 csv_path = '/home/setoudie/PycharmProjects/scrapingProject/job_scraping_project/data/raw/EmploisSenegal_IT_jobs.csv'
+
+# Url for the database
+connection_url = f'postgresql://{USER}:{PASS}@{HOST}:{PORT}/{DB_NAME}'
+engine = create_engine(connection_url)
 
 rows = []  # This is all dataFrame row
 # row = [job_title_name, company_name, job_description, job_contract_type, job_skils]
@@ -56,5 +70,8 @@ else:
 
 df = pd.DataFrame(data=rows, columns=cols_name)
 csv_file = df.to_csv(csv_path)
+
+# Insert data
+df.to_sql(table_name, engine, if_exists="replace", index=False)
 
 print(df[['Title', 'Skills']].head(6))

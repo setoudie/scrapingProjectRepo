@@ -1,31 +1,34 @@
-import time
 from selenium import webdriver
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from bs4 import BeautifulSoup
-import pandas as pd
-import requests
-from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+import time
 
-url = 'https://www.indeed.com/?from=jobsearch-empty-whatwhere'
+# Setup Chrome options
+chrome_options = Options()
 
-SEARCH_THEME = 'Technology'
-LOCALITY = 'Senegal'
+# Setup WebDriver with ChromeDriverManager
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-driver = webdriver.Chrome()
-driver.get(url)
+# Navigate to the website
+driver.get("https://python.org")
 
-search_box_input = WebDriverWait(driver, 15).until(
-    EC.presence_of_element_located((By.ID, "text-input-what"))
-)
-search_box_input.send_keys(SEARCH_THEME + Keys.ENTER)
-locality_box_input = driver.find_element(By.ID, "text-input-where")
-locality_box_input.send_keys(LOCALITY + Keys.ENTER)
+try:
+    # Wait for the button to be clickable
+    input_ = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "id-search-field"))
+    )
+    # Click the button once it's clickable
+    input_.send_keys('pip' + Keys.ENTER)
+    time.sleep(10)
 
-job_search_page = driver.page_source
-soupe = BeautifulSoup(job_search_page, 'html.parser')
+except:
+    # Handle cases where the button is not found or not clickable within the timeout
+    print("The button with ID 'my-button' was not found or was not clickable within 10 seconds.")
 
-print(soupe)
-time.sleep(5)
+# It's good practice to close the browser when done
+driver.quit()
