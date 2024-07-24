@@ -71,7 +71,7 @@ else:
 df = pd.DataFrame(data=rows, columns=cols_name)
 csv_file = df.to_csv(csv_path)
 
-# Insert data
+# Insert raw data to the database
 df.to_sql(table_name, engine, if_exists="replace", index=False)
 
 print(df[['Title', 'Skills']].head(6))
