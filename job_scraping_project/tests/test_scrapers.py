@@ -30,7 +30,6 @@ for row in rows[1:]:
     datas.append(row_content)
     # print(data)
 
-
 # Create the dataFrame
 df = pd.DataFrame(data=datas, columns=header_cols)
 # Supprimer les caractères de nouvelle ligne dans les colonnes
