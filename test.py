@@ -1,34 +1,64 @@
-from selenium import webdriver
-from selenium.webdriver import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
+"""
+    Ce code permet de juste me connecter a monster et glassdoor
+"""
 import time
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
+import pandas as pd
+import requests
 
-# Setup Chrome options
-chrome_options = Options()
+glassdoor_link = 'https://www.glassdoor.com/index.htm'
+monster_link = "https://identity.monster.com"
+E_MAIL = 'tdseny@gmail.com'
+PASSWORD = 'd58b470c030cb8d4eb0a0f608bc4f8c0c3af7719'  # only monster website password has '#'
+SEARCH_THEME = 'Technology'
 
-# Setup WebDriver with ChromeDriverManager
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+db_name = 'IT_Jobs.db'
+csv_path = '/home/setoudie/PycharmProjects/scrapingProject/job_scraping_project/data/raw/Linkedin_IT_jobs.csv'
 
-# Navigate to the website
-driver.get("https://python.org")
+driver_path = '/usr/local/bin/chromedriver'
+service = Service(executable_path=driver_path)
+driver = webdriver.Chrome(service=service)
 
-try:
-    # Wait for the button to be clickable
-    input_ = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "id-search-field"))
-    )
-    # Click the button once it's clickable
-    input_.send_keys('pip' + Keys.ENTER)
-    time.sleep(10)
+# driver.get('https://google.com')
+driver.maximize_window()
+driver.get(monster_link)
+# time.sleep(5)
+# Get the "Log In" btn and click it
+log_in_btn = WebDriverWait(driver, 15).until(
+    EC.presence_of_element_located((By.LINK_TEXT, "Log in"))
+)
+log_in_btn.click()
 
-except:
-    # Handle cases where the button is not found or not clickable within the timeout
-    print("The button with ID 'my-button' was not found or was not clickable within 10 seconds.")
+# Get the Glassdoor button an click it
+# sign_in_btn = WebDriverWait(driver, 15).until(
+#     EC.presence_of_element_located((By.ID, "SignInButton"))
+# )
+# sign_in_btn.click()
 
-# It's good practice to close the browser when done
+# Enter the login informations
+# Get the username input and write here the E_MAIL
+username_input = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.ID, "email"))  # "email" ---> monster | inlineUserEmail ---> glassdoor
+)
+username_input.send_keys(E_MAIL)
+time.sleep(3)
+username_input.send_keys(Keys.ENTER)
+# time.sleep(5)
+
+# Get the password input and write here the PASSWORD
+password_input = WebDriverWait(driver, 2).until(
+    EC.presence_of_element_located((By.ID, "password"))  # "password" ---> monster | "inlineUserPassword" ---> glassdoor
+)
+password_input.send_keys(PASSWORD)
+time.sleep(3)
+password_input.send_keys(Keys.ENTER)
+
+time.sleep(90)
+
 driver.quit()
