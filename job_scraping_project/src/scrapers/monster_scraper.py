@@ -31,6 +31,19 @@ driver = webdriver.Chrome(service=service)
 driver.maximize_window()
 driver.get(linkedin_url)
 
+
+def get_number_of_jobs_in_page(ul_xpath, web_driver):
+    WebDriverWait(web_driver, 5).until(
+        EC.presence_of_element_located((By.XPATH, ul_xpath))
+    )
+
+    ul_page = driver.page_source
+    soupe = BeautifulSoup(ul_page, 'html.parser')
+    ul_jobs_soup = soupe.find_all('div', class_="flex-grow-1 artdeco-entity-lockup__content ember-view")
+    print(ul_jobs_soup)
+    print(len(ul_jobs_soup))
+
+
 # Put the username value : the e-mail
 """
     1. Get the mail input 
@@ -70,5 +83,6 @@ employs_btn = WebDriverWait(driver, 5).until(
     EC.presence_of_element_located((By.XPATH, "//*[@id=\"search-reusables__filters-bar\"]/ul/li[1]/button"))
 )
 employs_btn.click()
-time.sleep(30)
-
+time.sleep(12)
+get_number_of_jobs_in_page("//*[@id=\"main\"]/div/div[2]/div[1]/div/ul", driver)
+time.sleep(190)
